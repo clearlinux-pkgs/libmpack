@@ -4,18 +4,39 @@
 #
 Name     : libmpack
 Version  : 1.0.5
-Release  : 1
+Release  : 2
 URL      : https://github.com/libmpack/libmpack/archive/1.0.5.tar.gz
 Source0  : https://github.com/libmpack/libmpack/archive/1.0.5.tar.gz
 Summary  : Simple implementation of msgpack in C
 Group    : Development/Tools
 License  : LGPL-3.0 MIT
+Requires: libmpack-lib = %{version}-%{release}
 Requires: libmpack-license = %{version}-%{release}
 
 %description
 ## libmpack
 [![Travis Build Status](https://travis-ci.org/libmpack/libmpack.svg?branch=master)](https://travis-ci.org/libmpack/libmpack)
 [![Coverage Status](https://coveralls.io/repos/libmpack/libmpack/badge.svg?branch=master&service=github)](https://coveralls.io/github/libmpack/libmpack?branch=master)
+
+%package dev
+Summary: dev components for the libmpack package.
+Group: Development
+Requires: libmpack-lib = %{version}-%{release}
+Provides: libmpack-devel = %{version}-%{release}
+Requires: libmpack = %{version}-%{release}
+
+%description dev
+dev components for the libmpack package.
+
+
+%package lib
+Summary: lib components for the libmpack package.
+Group: Libraries
+Requires: libmpack-license = %{version}-%{release}
+
+%description lib
+lib components for the libmpack package.
+
 
 %package license
 Summary: license components for the libmpack package.
@@ -33,7 +54,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1564511539
+export SOURCE_DATE_EPOCH=1564514369
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -42,19 +63,30 @@ export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
-make  %{?_smp_mflags}
+make  %{?_smp_mflags} PREFIX=/usr LIBDIR=/usr/lib64
 
 
 %install
-export SOURCE_DATE_EPOCH=1564511539
+export SOURCE_DATE_EPOCH=1564514369
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libmpack
 cp LICENSE-MIT %{buildroot}/usr/share/package-licenses/libmpack/LICENSE-MIT
 cp test/deps/tap/COPYING %{buildroot}/usr/share/package-licenses/libmpack/test_deps_tap_COPYING
-%make_install
+%make_install PREFIX=/usr LIBDIR=/usr/lib64
 
 %files
 %defattr(-,root,root,-)
+
+%files dev
+%defattr(-,root,root,-)
+/usr/include/*.h
+/usr/lib64/libmpack.so
+/usr/lib64/pkgconfig/mpack.pc
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/libmpack.so.0
+/usr/lib64/libmpack.so.0.0.0
 
 %files license
 %defattr(0644,root,root,0755)
