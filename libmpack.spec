@@ -4,10 +4,10 @@
 #
 Name     : libmpack
 Version  : 1.0.5
-Release  : 2
+Release  : 3
 URL      : https://github.com/libmpack/libmpack/archive/1.0.5.tar.gz
 Source0  : https://github.com/libmpack/libmpack/archive/1.0.5.tar.gz
-Summary  : Simple implementation of msgpack in C
+Summary  : small binary serialization library implementing msgpack and msgpack-rpc formats
 Group    : Development/Tools
 License  : LGPL-3.0 MIT
 Requires: libmpack-lib = %{version}-%{release}
@@ -48,30 +48,31 @@ license components for the libmpack package.
 
 %prep
 %setup -q -n libmpack-1.0.5
+cd %{_builddir}/libmpack-1.0.5
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1564514369
+export SOURCE_DATE_EPOCH=1604359423
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
 export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
-make  %{?_smp_mflags} PREFIX=/usr LIBDIR=/usr/lib64
+make  %{?_smp_mflags}  PREFIX=/usr LIBDIR=/usr/lib64
 
 
 %install
-export SOURCE_DATE_EPOCH=1564514369
+export SOURCE_DATE_EPOCH=1604359423
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/libmpack
-cp LICENSE-MIT %{buildroot}/usr/share/package-licenses/libmpack/LICENSE-MIT
-cp test/deps/tap/COPYING %{buildroot}/usr/share/package-licenses/libmpack/test_deps_tap_COPYING
+cp %{_builddir}/libmpack-1.0.5/LICENSE-MIT %{buildroot}/usr/share/package-licenses/libmpack/d74b19fe43f401d150ff9388fadea9d7f424884e
+cp %{_builddir}/libmpack-1.0.5/test/deps/tap/COPYING %{buildroot}/usr/share/package-licenses/libmpack/f45ee1c765646813b442ca58de72e20a64a7ddba
 %make_install PREFIX=/usr LIBDIR=/usr/lib64
 
 %files
@@ -79,7 +80,7 @@ cp test/deps/tap/COPYING %{buildroot}/usr/share/package-licenses/libmpack/test_d
 
 %files dev
 %defattr(-,root,root,-)
-/usr/include/*.h
+/usr/include/mpack.h
 /usr/lib64/libmpack.so
 /usr/lib64/pkgconfig/mpack.pc
 
@@ -90,5 +91,5 @@ cp test/deps/tap/COPYING %{buildroot}/usr/share/package-licenses/libmpack/test_d
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/libmpack/LICENSE-MIT
-/usr/share/package-licenses/libmpack/test_deps_tap_COPYING
+/usr/share/package-licenses/libmpack/d74b19fe43f401d150ff9388fadea9d7f424884e
+/usr/share/package-licenses/libmpack/f45ee1c765646813b442ca58de72e20a64a7ddba
